@@ -1,5 +1,6 @@
 const Koa = require("koa");
 mongoose = require("mongoose");
+const koaBody = require("koa-body");
 
 const api = require("./routes");
 
@@ -10,4 +11,4 @@ mongoose.set("debug", true);
 
 require("./tag/model");
 
-app.use(api.routes()).listen(3000);
+app.use(koaBody()).use(api.routes()).listen(3000);

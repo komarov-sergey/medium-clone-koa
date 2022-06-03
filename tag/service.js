@@ -8,10 +8,10 @@ async function getTag() {
   };
 }
 
-async function postTags() {
+async function postTags({ name }) {
   const tag = await Tag.findOneAndUpdate(
-    { name: "string3" },
-    { name: "string3" },
+    { name },
+    { name },
     {
       new: true,
       upsert: true,

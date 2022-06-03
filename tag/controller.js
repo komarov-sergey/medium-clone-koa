@@ -5,7 +5,7 @@ async function getTags(ctx) {
 }
 
 async function postTags(ctx) {
-  ctx.body = await service.postTags();
+  ctx.body = await service.postTags(ctx.request.body);
 }
 
 module.exports = {
