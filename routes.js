@@ -1,5 +1,5 @@
 const Router = require("koa-router");
 
-const users = require("./features/users/routes");
+const tag = require("./tag/route");
 
-module.exports = new Router({ prefix: "/api" }).use("/users", users.routes());
+module.exports = new Router({ prefix: "/api" }).use("/tags", tag.routes());
