@@ -1,7 +1,7 @@
 const service = require("./service");
 
 async function getTags(ctx) {
-  ctx.body = await service.getTag();
+  ctx.body = await service.getTag(ctx);
 }
 
 async function postTags(ctx) {

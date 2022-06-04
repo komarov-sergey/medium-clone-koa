@@ -1,7 +1,19 @@
 const Tag = require("./model");
 
-async function getTag() {
-  const tags = await Tag.find({});
+async function getTag(ctx) {
+  let tags;
+  try {
+    tags = await Tag.find({});
+    // throw new Error("Test err");
+  } catch (e) {
+    ctx.status = 422;
+
+    return {
+      errors: {
+        body: ["Error in getTag()"],
+      },
+    };
+  }
 
   return {
     tags: tags.map((tag) => tag.toJSON()),
