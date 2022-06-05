@@ -30,7 +30,9 @@ async function login(ctx) {
     user = await User.findOne({ email });
 
     if (!user || !user.validPassword(password)) throw new Error();
-    // if (!user) throw new Error();
+
+    user.token = user.generateJWT();
+    user.save();
   } catch (e) {
     ctx.status = 422;
 
@@ -46,4 +48,24 @@ async function login(ctx) {
   };
 }
 
-module.exports = { registerUser, login };
+async function getCurrentUser(ctx) {
+  let user;
+  try {
+    // let { email, password } = ctx.request.body.user;
+  } catch (e) {
+    ctx.status = 422;
+
+    return {
+      errors: {
+        body: ["Error in getCurrentUser()"],
+      },
+    };
+  }
+
+  return {
+    // user: user.toLoginJSON(),
+    user: ctx.state.user.toCurrentUserJSON(),
+  };
+}
+
+module.exports = { registerUser, login, getCurrentUser };

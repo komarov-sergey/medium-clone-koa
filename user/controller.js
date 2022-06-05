@@ -8,7 +8,12 @@ async function login(ctx) {
   ctx.body = await service.login(ctx);
 }
 
+async function getCurrentUser(ctx) {
+  ctx.body = await service.getCurrentUser(ctx);
+}
+
 module.exports = {
   registerUser,
   login,
+  getCurrentUser,
 };

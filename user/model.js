@@ -18,6 +18,7 @@ const UserSchema = new mongoose.Schema(
     bio: String,
     image: String,
     phone: Number,
+    token: String,
     organization: String,
     role: String,
     type: String,
@@ -55,11 +56,11 @@ UserSchema.methods.generateJWT = function () {
   const exp = new Date(today);
 
   // 60 days
-  exp.setDate(today.getTime() + 60);
+  exp.setDate(today.getDate() + 60);
   // 5min
   // exp.setMinutes(today.getMinutes() + 15);
 
-  return jwt.sign(
+  this.token = jwt.sign(
     {
       id: this._id,
       username: this.username,
@@ -67,6 +68,8 @@ UserSchema.methods.generateJWT = function () {
     },
     "secret"
   );
+
+  return this.token;
 };
 
 UserSchema.methods.toRegisterJSON = function () {
@@ -82,7 +85,17 @@ UserSchema.methods.toRegisterJSON = function () {
 UserSchema.methods.toLoginJSON = function () {
   return {
     email: this.email,
-    token: this.generateJWT(),
+    token: this.token,
+    username: this.username,
+    bio: this.email,
+    image: this.image,
+  };
+};
+
+UserSchema.methods.toCurrentUserJSON = function () {
+  return {
+    email: this.email,
+    token: this.token,
     username: this.username,
     bio: this.email,
     image: this.image,
