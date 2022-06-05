@@ -4,7 +4,6 @@ async function getTag(ctx) {
   let tags;
   try {
     tags = await Tag.find({});
-    // throw new Error("Test err");
   } catch (e) {
     ctx.status = 422;
 

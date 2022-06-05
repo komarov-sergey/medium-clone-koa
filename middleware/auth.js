@@ -1,8 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const User = require("../user/model");
-
-//check koa-jwt package
+const { AuthError } = require("../error");
 
 module.exports = async function (ctx, next) {
   const token =
@@ -11,7 +10,7 @@ module.exports = async function (ctx, next) {
       ? ctx.headers.authorization.split(" ")[1]
       : "";
 
-  if (!token) throw new Error("NOT_AUTHORIZED");
+  if (!token) throw new AuthError("Invalid token");
 
   if (token) {
     try {
@@ -20,11 +19,11 @@ module.exports = async function (ctx, next) {
 
       const user = await User.findById(tokenData.id);
 
-      if (!user) throw new Error("Invalid token");
+      if (!user) throw new AuthError("Invalid token");
 
       ctx.state.user = user;
     } catch (e) {
-      throw new Error("Invalid token");
+      throw new AuthError("Invalid token");
     }
   }
 

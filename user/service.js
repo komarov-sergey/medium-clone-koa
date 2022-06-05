@@ -7,7 +7,6 @@ async function registerUser(ctx) {
     user = await User.create({ ...body });
     user.setPassword(body.password);
     user.save();
-    // throw new Error("Test err");
   } catch (e) {
     ctx.status = 422;
 
@@ -51,7 +50,6 @@ async function login(ctx) {
 async function getCurrentUser(ctx) {
   let user;
   try {
-    // let { email, password } = ctx.request.body.user;
   } catch (e) {
     ctx.status = 422;
 
@@ -63,9 +61,34 @@ async function getCurrentUser(ctx) {
   }
 
   return {
-    // user: user.toLoginJSON(),
     user: ctx.state.user.toCurrentUserJSON(),
   };
 }
 
-module.exports = { registerUser, login, getCurrentUser };
+async function updateCurrentUser(ctx) {
+  let user;
+  try {
+    user = await User.findOneAndUpdate(
+      { _id: ctx.state.user._id.toString() },
+      { ...ctx.request.body.user },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
+  } catch (e) {
+    ctx.status = 422;
+
+    return {
+      errors: {
+        body: ["Error in updateCurrentUser()"],
+      },
+    };
+  }
+
+  return {
+    user: user.toCurrentUserJSON(),
+  };
+}
+
+module.exports = { registerUser, login, getCurrentUser, updateCurrentUser };
