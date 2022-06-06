@@ -12,7 +12,7 @@ const ArticleSchema = new mongoose.Schema(
     description: String,
     body: String,
     // favoritesCount: { type: Number, default: 0 },
-    // tagList: [{ type: String }],
+    tagList: [{ type: String }],
     author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     // comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
   },
@@ -36,17 +36,29 @@ ArticleSchema.pre("validate", function (next) {
   next();
 });
 
-ArticleSchema.methods.toJSONFor = function (user) {
+ArticleSchema.methods.toCreateJSON = function (user) {
+  return {
+    title: this.title,
+    description: this.description,
+    body: this.body,
+    tagList: this.tagList,
+  };
+};
+
+ArticleSchema.methods.toGetJSON = function (user) {
   return {
     slug: this.slug,
     title: this.title,
     description: this.description,
     body: this.body,
+    tagList: this.tagList,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
-    tagList: this.tagList,
-    favorited: user ? user.isFavorite(this._id) : false,
-    favoritesCount: this.favoriteCount,
-    author: this.author.toProfileJSONFor(user),
+    author: this.author,
+    //TODO add this fields
+    favorited: false,
+    favoritesCount: 0,
   };
 };
+
+module.exports = mongoose.model("Article", ArticleSchema);

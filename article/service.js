@@ -1,25 +1,43 @@
 const Article = require("./model");
 
 async function createArticle(ctx) {
-  // let user;
-  // let body = ctx.request.body.user;
+  let article;
+  let body = ctx.request.body.article;
   try {
-    // user = await User.create({ ...body });
-    // user.setPassword(body.password);
-    // user.save();
+    article = await Article.create({ ...body });
   } catch (e) {
     ctx.status = 422;
 
     return {
       errors: {
-        body: ["Error in registerUser()"],
+        body: ["Error in createArticle()"],
       },
     };
   }
 
   return {
-    user: user.toRegisterJSON(),
+    article: article.toCreateJSON(),
   };
 }
 
-module.exports = { createArticle };
+async function getArticle(ctx) {
+  let article;
+  let slug = ctx.params.slug;
+  try {
+    article = await Article.findOne({ slug });
+  } catch (e) {
+    ctx.status = 422;
+
+    return {
+      errors: {
+        body: ["Error in getArticle()"],
+      },
+    };
+  }
+
+  return {
+    article: article.toGetJSON(),
+  };
+}
+
+module.exports = { createArticle, getArticle };
